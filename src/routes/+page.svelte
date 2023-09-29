@@ -100,7 +100,7 @@
 	ctrl + mouse - drag <br />
 	left mouse - select point <br />
 	right mouse - add point <br />
-	<a href="//github.com/FlokiTV" target="_blank">by Dawyson Wüster</a>
+	<a class="pt-2" href="//github.com/FlokiTV" target="_blank">by Dawyson Wüster</a>
 </div>
 <div class="fixed left-[10px] top-[10px] bg-black text-white p-1 px-3 text-xs flex flex-col gap-1">
 	<span>point list</span>
