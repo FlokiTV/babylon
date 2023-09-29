@@ -119,10 +119,7 @@ export class App {
 
 		scene.onPointerMove = () => {
 			this.#sphere.material.alpha = 0.8;
-			for (const point of this.points) {
-				point.material.alpha = 0.7;
-				point.material.emissiveColor = Color3.Blue();
-			}
+			this.hoverPoint = null
 			let hit = this.raycast();
 			if (hit) {
 				const { pickedMesh, pickedPoint } = hit;
@@ -137,8 +134,8 @@ export class App {
 					}
 					if (id == 'point') {
 						this.#sphere.material.alpha = 0;
-						pickedMesh.material.alpha = 1;
-						pickedMesh.material.emissiveColor = Color3.Green();
+						// this.selectPoint(name);
+						this.hoverPoint = name;
 					}
 				}
 			}
@@ -202,6 +199,20 @@ export class App {
 
 		// run the main render loop
 		engine.runRenderLoop(() => {
+			for (const pointId in this.points) {
+				const point = this.points[pointId];
+				if (pointId == this.selectedPoint) {
+					point.material.alpha = 1;
+					point.material.emissiveColor = Color3.Green();
+				}else if (pointId == this.hoverPoint) {
+					point.material.alpha = 1;
+					// point.material.emissiveColor = Color3.Green();
+				} 
+				else {
+					point.material.alpha = 0.6;
+					point.material.emissiveColor = Color3.Blue();
+				}
+			}
 			scene.render();
 		});
 	}
@@ -237,6 +248,12 @@ export class App {
 	isCurrentMesh(mesh) {
 		return this.currentMesh == mesh.name;
 	}
+	selectPoint(id) {
+		this.selectedPoint = id;
+	}
+	removeSelectedPoint() {
+		this.selectedPoint = null;
+	}
 	addPoint(x, y, z) {
 		let sphere = MeshBuilder.CreateSphere('point', { diameter: 0.1 }, this.#scene);
 		sphere.scaling.copyFrom(this.#sphere.scaling.clone());
@@ -247,8 +264,9 @@ export class App {
 		sphere.material = mat;
 		sphere.name = this.points.length;
 		this.points.push(sphere);
-		console.log(this.#camera.position);
-		console.log(this.#camera.getViewMatrix());
+		// console.log(this.#camera.position);
+		// console.log(this.#camera.getViewMatrix());
+		return sphere.name;
 	}
 	rmPoint(index) {
 		let mesh = this.points[index];
